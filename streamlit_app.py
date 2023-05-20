@@ -1,38 +1,52 @@
-from collections import namedtuple
-import altair as alt
-import math
 import pandas as pd
+import numpy as np
 import streamlit as st
+import yfinance as yf
+import datetime as dt
 
-"""
-# Welcome to Streamlit!
+liste = {
+    "BTC" : "BTC-USD",
+    "ETH" : "ETH-USD",
+    "XRP" : "XRP-USD",
+    "SHIB" : "SHIB-USD"
+}
+sec = st.sidebar.selectbox("KriptoPara",liste.keys())
+ticker = liste.get(sec)
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:
-
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
-
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+def veri(ticker,baslangic="2004-01-01",bitis=dt.datetime.today().date()):
+   df = yf.download(ticker,baslangic,bitis)
+   df=df['Close']
+   st.line_chart(df)
 
 
-with st.echo(code_location='below'):
-    total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
-    num_turns = st.slider("Number of turns in spiral", 1, 100, 9)
+col1,col2,col3 = st.columns(3)
 
-    Point = namedtuple('Point', 'x y')
-    data = []
+with col1:
+    son30 = st.button("30 Gün")
 
-    points_per_turn = total_points / num_turns
+with col2:
+    son90 = st.button("90 Gün")
 
-    for curr_point_num in range(total_points):
-        curr_turn, i = divmod(curr_point_num, points_per_turn)
-        angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / total_points
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
-        data.append(Point(x, y))
+with col3:
+    son360 = st.button("365 Gün")
 
-    st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-        .mark_circle(color='#0068c9', opacity=0.5)
-        .encode(x='x:Q', y='y:Q'))
+
+bugun = dt.datetime.today().date()
+
+if son30:
+    baslangic = bugun - dt.timedelta(days=30)
+    bitis = bugun
+elif son90:
+    baslangic = bugun - dt.timedelta(days=90)
+    bitis = bugun
+elif son360:
+    baslangic = bugun - dt.timedelta(days=365)
+    bitis = bugun
+else:
+    baslangic = "2004-01-01"
+    bitis = bugun
+
+veri(ticker,baslangic,bitis)
+
+
+
