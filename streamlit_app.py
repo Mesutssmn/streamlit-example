@@ -10,8 +10,8 @@ list = {
     "XRP" : "XRP-USD",
     "SHIB" : "SHIB-USD"
 }
-sec = st.sidebar.selectbox("Cryptocurrency",liste.keys())
-ticker = liste.get(sec)
+sec = st.sidebar.selectbox("Cryptocurrency",list.keys())
+ticker = list.get(sec)
 
 def data(ticker,start="2004-01-01",end=dt.datetime.today().date()):
    df = yf.download(ticker,start,end)
