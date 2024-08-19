@@ -4,17 +4,17 @@ import streamlit as st
 import yfinance as yf
 import datetime as dt
 
-liste = {
+list = {
     "BTC" : "BTC-USD",
     "ETH" : "ETH-USD",
     "XRP" : "XRP-USD",
     "SHIB" : "SHIB-USD"
 }
-sec = st.sidebar.selectbox("KriptoPara",liste.keys())
+sec = st.sidebar.selectbox("Cryptocurrency",liste.keys())
 ticker = liste.get(sec)
 
-def veri(ticker,baslangic="2004-01-01",bitis=dt.datetime.today().date()):
-   df = yf.download(ticker,baslangic,bitis)
+def data(ticker,start="2004-01-01",end=dt.datetime.today().date()):
+   df = yf.download(ticker,start,end)
    df=df['Close']
    st.line_chart(df)
 
@@ -22,31 +22,31 @@ def veri(ticker,baslangic="2004-01-01",bitis=dt.datetime.today().date()):
 col1,col2,col3 = st.columns(3)
 
 with col1:
-    son30 = st.button("30 Gün")
+    last30 = st.button("30 Days")
 
 with col2:
-    son90 = st.button("90 Gün")
+    last90 = st.button("90 Days")
 
 with col3:
-    son360 = st.button("365 Gün")
+    last360 = st.button("365 Days")
 
 
-bugun = dt.datetime.today().date()
+today = dt.datetime.today().date()
 
-if son30:
-    baslangic = bugun - dt.timedelta(days=30)
-    bitis = bugun
-elif son90:
-    baslangic = bugun - dt.timedelta(days=90)
-    bitis = bugun
-elif son360:
-    baslangic = bugun - dt.timedelta(days=365)
-    bitis = bugun
+if last30:
+    start = today - dt.timedelta(days=30)
+    end = today
+elif last90:
+    start = today - dt.timedelta(days=90)
+    end = today
+elif last360:
+    start = today - dt.timedelta(days=365)
+    end = today
 else:
-    baslangic = "2004-01-01"
-    bitis = bugun
+    start = "2004-01-01"
+    end = today
 
-veri(ticker,baslangic,bitis)
+veri(ticker,start,end)
 
 
 
