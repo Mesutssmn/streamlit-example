@@ -46,7 +46,7 @@ else:
     start = "2004-01-01"
     end = today
 
-veri(ticker,start,end)
+data(ticker,start,end)
 
 
 
